@@ -1,0 +1,292 @@
+[
+  {
+    "name": "Infectious Diseases",
+    "icd_code": "A00-B99",
+    "category": "Infectious Diseases",
+    "description": "Certain infectious and parasitic diseases",
+    "synonyms": [],
+    "subtypes": [],
+    "children": [
+      {
+        "name": "COVID-19",
+        "icd_code": "U07.1",
+        "category": "Viral Respiratory Disease",
+        "description": "Coronavirus disease 2019 caused by SARS-CoV-2. A respiratory illness that can spread from person to person, ranging from mild to severe.",
+        "synonyms": ["Coronavirus Disease 2019", "SARS-CoV-2 Infection", "Novel Coronavirus"],
+        "subtypes": ["Alpha", "Beta", "Delta", "Omicron", "BA.2", "XBB"]
+      },
+      {
+        "name": "Influenza",
+        "icd_code": "J09-J11",
+        "category": "Viral Respiratory Disease",
+        "description": "Acute respiratory infection caused by influenza viruses. Seasonal epidemics occur globally with significant morbidity and mortality.",
+        "synonyms": ["Flu", "Seasonal Influenza", "Grippe"],
+        "subtypes": ["H1N1", "H3N2", "H5N1", "H7N9", "Influenza B"]
+      },
+      {
+        "name": "Dengue Fever",
+        "icd_code": "A90-A91",
+        "category": "Vector-Borne Disease",
+        "description": "Mosquito-borne viral disease transmitted by Aedes mosquitoes. Can progress to dengue hemorrhagic fever or shock syndrome.",
+        "synonyms": ["Dengue", "Break-Bone Fever", "Dengue Hemorrhagic Fever"],
+        "subtypes": ["DENV-1", "DENV-2", "DENV-3", "DENV-4"]
+      },
+      {
+        "name": "Malaria",
+        "icd_code": "B50-B54",
+        "category": "Parasitic Disease",
+        "description": "Life-threatening disease caused by Plasmodium parasites transmitted through bites of infected Anopheles mosquitoes.",
+        "synonyms": ["Paludism", "Marsh Fever"],
+        "subtypes": ["P. falciparum", "P. vivax", "P. malariae", "P. ovale", "P. knowlesi"]
+      },
+      {
+        "name": "Tuberculosis",
+        "icd_code": "A15-A19",
+        "category": "Bacterial Disease",
+        "description": "Chronic bacterial infection caused by Mycobacterium tuberculosis, primarily affecting the lungs. A major global health threat.",
+        "synonyms": ["TB", "Consumption", "White Plague"],
+        "subtypes": ["Pulmonary TB", "Extrapulmonary TB", "Latent TB", "MDR-TB", "XDR-TB"]
+      },
+      {
+        "name": "HIV/AIDS",
+        "icd_code": "B20-B24",
+        "category": "Viral Disease",
+        "description": "Human immunodeficiency virus infection and acquired immunodeficiency syndrome. Attacks the immune system, specifically CD4 cells.",
+        "synonyms": ["Human Immunodeficiency Virus", "AIDS", "Acquired Immunodeficiency Syndrome"],
+        "subtypes": ["HIV-1", "HIV-2"]
+      },
+      {
+        "name": "Cholera",
+        "icd_code": "A00",
+        "category": "Bacterial Disease",
+        "description": "Acute diarrhoeal infection caused by ingestion of Vibrio cholerae bacteria. Can be rapidly fatal without treatment.",
+        "synonyms": ["Asiatic Cholera", "Epidemic Cholera"],
+        "subtypes": ["Classical", "El Tor"]
+      },
+      {
+        "name": "Ebola Virus Disease",
+        "icd_code": "A98.4",
+        "category": "Viral Hemorrhagic Fever",
+        "description": "Severe, often fatal hemorrhagic fever in humans caused by Ebola virus. High case fatality rate.",
+        "synonyms": ["Ebola", "EVD", "Ebola Hemorrhagic Fever"],
+        "subtypes": ["Zaire", "Sudan", "Bundibugyo", "Tai Forest", "Reston"]
+      },
+      {
+        "name": "Hepatitis B",
+        "icd_code": "B16",
+        "category": "Viral Disease",
+        "description": "Viral infection attacking the liver caused by Hepatitis B virus. Can become chronic and lead to cirrhosis or liver cancer.",
+        "synonyms": ["HBV Infection", "Serum Hepatitis"],
+        "subtypes": ["Acute HBV", "Chronic HBV"]
+      },
+      {
+        "name": "Hepatitis C",
+        "icd_code": "B17.1",
+        "category": "Viral Disease",
+        "description": "Blood-borne viral infection caused by Hepatitis C virus. Major cause of chronic liver disease worldwide.",
+        "synonyms": ["HCV Infection"],
+        "subtypes": ["Genotype 1", "Genotype 2", "Genotype 3", "Genotype 4"]
+      },
+      {
+        "name": "Measles",
+        "icd_code": "B05",
+        "category": "Viral Disease",
+        "description": "Highly contagious viral disease preventable by vaccination. Can cause severe complications including pneumonia and encephalitis.",
+        "synonyms": ["Rubeola", "Red Measles"],
+        "subtypes": []
+      },
+      {
+        "name": "Zika Virus Disease",
+        "icd_code": "A92.5",
+        "category": "Vector-Borne Disease",
+        "description": "Mosquito-borne viral disease primarily transmitted by Aedes mosquitoes. Associated with birth defects and neurological complications.",
+        "synonyms": ["Zika", "Zika Fever", "ZIKV Infection"],
+        "subtypes": ["African Lineage", "Asian Lineage"]
+      },
+      {
+        "name": "Yellow Fever",
+        "icd_code": "A95",
+        "category": "Vector-Borne Disease",
+        "description": "Acute viral hemorrhagic disease transmitted by infected mosquitoes. Preventable by vaccination.",
+        "synonyms": ["Yellow Jack", "Bronze John"],
+        "subtypes": []
+      },
+      {
+        "name": "Plague",
+        "icd_code": "A20",
+        "category": "Bacterial Disease",
+        "description": "Infectious disease caused by Yersinia pestis. Can manifest as bubonic, septicemic, or pneumonic plague.",
+        "synonyms": ["Black Death", "Bubonic Plague", "Pestilence"],
+        "subtypes": ["Bubonic", "Septicemic", "Pneumonic"]
+      },
+      {
+        "name": "Rabies",
+        "icd_code": "A82",
+        "category": "Viral Disease",
+        "description": "Fatal viral disease transmitted through bites of infected animals. Nearly 100% fatal once symptoms appear.",
+        "synonyms": ["Hydrophobia", "Lyssa"],
+        "subtypes": []
+      }
+    ]
+  },
+  {
+    "name": "Chronic Non-Communicable Diseases",
+    "icd_code": "E00-E90",
+    "category": "Non-Communicable Diseases",
+    "description": "Endocrine, nutritional and metabolic diseases, and other chronic conditions",
+    "synonyms": ["NCDs"],
+    "subtypes": [],
+    "children": [
+      {
+        "name": "Type 2 Diabetes",
+        "icd_code": "E11",
+        "category": "Metabolic Disease",
+        "description": "Chronic metabolic disorder characterized by high blood sugar, insulin resistance, and relative lack of insulin.",
+        "synonyms": ["Diabetes Mellitus Type 2", "T2DM", "Adult-Onset Diabetes", "Non-Insulin Dependent Diabetes"],
+        "subtypes": []
+      },
+      {
+        "name": "Type 1 Diabetes",
+        "icd_code": "E10",
+        "category": "Metabolic Disease",
+        "description": "Autoimmune form of diabetes where the immune system destroys insulin-producing beta cells in the pancreas.",
+        "synonyms": ["Diabetes Mellitus Type 1", "T1DM", "Juvenile Diabetes", "Insulin-Dependent Diabetes"],
+        "subtypes": []
+      },
+      {
+        "name": "Hypertension",
+        "icd_code": "I10-I15",
+        "category": "Cardiovascular Disease",
+        "description": "Persistently elevated arterial blood pressure. Major risk factor for heart disease, stroke, and kidney disease.",
+        "synonyms": ["High Blood Pressure", "HTN", "Arterial Hypertension"],
+        "subtypes": ["Essential Hypertension", "Secondary Hypertension", "Pulmonary Hypertension"]
+      },
+      {
+        "name": "Coronary Artery Disease",
+        "icd_code": "I25",
+        "category": "Cardiovascular Disease",
+        "description": "Narrowing or blockage of coronary arteries, usually caused by atherosclerosis. Leading cause of death worldwide.",
+        "synonyms": ["CAD", "Coronary Heart Disease", "Ischemic Heart Disease"],
+        "subtypes": ["Stable Angina", "Unstable Angina", "Myocardial Infarction"]
+      },
+      {
+        "name": "Stroke",
+        "icd_code": "I60-I69",
+        "category": "Cerebrovascular Disease",
+        "description": "Acute neurological injury due to disruption of blood supply to the brain. Second leading cause of death globally.",
+        "synonyms": ["Cerebrovascular Accident", "CVA", "Brain Attack"],
+        "subtypes": ["Ischemic Stroke", "Hemorrhagic Stroke", "Transient Ischemic Attack"]
+      },
+      {
+        "name": "Breast Cancer",
+        "icd_code": "C50",
+        "category": "Neoplasm",
+        "description": "Malignant neoplasm of breast tissue. Most common cancer in women worldwide.",
+        "synonyms": ["Mammary Carcinoma"],
+        "subtypes": ["Ductal Carcinoma", "Lobular Carcinoma", "HER2-positive", "Triple-negative"]
+      },
+      {
+        "name": "Lung Cancer",
+        "icd_code": "C34",
+        "category": "Neoplasm",
+        "description": "Malignant neoplasm of the lung. Leading cause of cancer death worldwide, strongly associated with smoking.",
+        "synonyms": ["Bronchogenic Carcinoma", "Pulmonary Carcinoma"],
+        "subtypes": ["Non-Small Cell", "Small Cell", "Adenocarcinoma", "Squamous Cell"]
+      }
+    ]
+  },
+  {
+    "name": "Respiratory Diseases",
+    "icd_code": "J00-J99",
+    "category": "Respiratory Diseases",
+    "description": "Diseases of the respiratory system",
+    "synonyms": [],
+    "subtypes": [],
+    "children": [
+      {
+        "name": "Asthma",
+        "icd_code": "J45",
+        "category": "Chronic Respiratory Disease",
+        "description": "Chronic inflammatory disease of the airways characterized by variable and recurring symptoms, reversible airflow obstruction.",
+        "synonyms": ["Bronchial Asthma", "Reactive Airway Disease"],
+        "subtypes": ["Allergic Asthma", "Non-Allergic Asthma", "Exercise-Induced", "Occupational"]
+      },
+      {
+        "name": "COPD",
+        "icd_code": "J44",
+        "category": "Chronic Respiratory Disease",
+        "description": "Chronic obstructive pulmonary disease — progressive lung disease causing obstructed airflow from the lungs.",
+        "synonyms": ["Chronic Obstructive Pulmonary Disease", "Chronic Bronchitis", "Emphysema"],
+        "subtypes": ["Chronic Bronchitis", "Emphysema"]
+      },
+      {
+        "name": "Pneumonia",
+        "icd_code": "J12-J18",
+        "category": "Acute Respiratory Infection",
+        "description": "Inflammatory condition of the lung parenchyma primarily caused by infection. Leading infectious cause of death in children.",
+        "synonyms": ["Lung Infection", "Lower Respiratory Infection"],
+        "subtypes": ["Bacterial", "Viral", "Fungal", "Aspiration", "Community-Acquired", "Hospital-Acquired"]
+      }
+    ]
+  },
+  {
+    "name": "Neurological Diseases",
+    "icd_code": "G00-G99",
+    "category": "Neurological Diseases",
+    "description": "Diseases of the nervous system",
+    "synonyms": [],
+    "subtypes": [],
+    "children": [
+      {
+        "name": "Alzheimer's Disease",
+        "icd_code": "G30",
+        "category": "Neurodegenerative Disease",
+        "description": "Progressive neurodegenerative disease and the most common cause of dementia. Characterized by memory loss and cognitive decline.",
+        "synonyms": ["Alzheimer Disease", "AD", "Senile Dementia of Alzheimer Type"],
+        "subtypes": ["Early-Onset", "Late-Onset"]
+      },
+      {
+        "name": "Parkinson's Disease",
+        "icd_code": "G20",
+        "category": "Neurodegenerative Disease",
+        "description": "Progressive nervous system disorder affecting movement. Develops gradually with tremor, stiffness, and slow movement.",
+        "synonyms": ["Parkinson Disease", "PD", "Paralysis Agitans", "Shaking Palsy"],
+        "subtypes": ["Idiopathic", "Young-Onset", "Secondary Parkinsonism"]
+      },
+      {
+        "name": "Epilepsy",
+        "icd_code": "G40",
+        "category": "Neurological Disorder",
+        "description": "Chronic neurological disorder characterized by recurrent unprovoked seizures.",
+        "synonyms": ["Seizure Disorder"],
+        "subtypes": ["Focal", "Generalized", "Absence", "Tonic-Clonic"]
+      }
+    ]
+  },
+  {
+    "name": "Mental Health Disorders",
+    "icd_code": "F00-F99",
+    "category": "Mental Health",
+    "description": "Mental, behavioral, and neurodevelopmental disorders",
+    "synonyms": ["Psychiatric Disorders"],
+    "subtypes": [],
+    "children": [
+      {
+        "name": "Major Depressive Disorder",
+        "icd_code": "F32-F33",
+        "category": "Mood Disorder",
+        "description": "Common and serious mood disorder causing persistent feelings of sadness and loss of interest.",
+        "synonyms": ["Depression", "Clinical Depression", "MDD", "Unipolar Depression"],
+        "subtypes": ["Single Episode", "Recurrent", "With Psychotic Features"]
+      },
+      {
+        "name": "Schizophrenia",
+        "icd_code": "F20",
+        "category": "Psychotic Disorder",
+        "description": "Chronic severe mental disorder affecting thinking, feeling, and behavior. Characterized by psychotic symptoms.",
+        "synonyms": ["SCZ"],
+        "subtypes": ["Paranoid", "Disorganized", "Catatonic", "Undifferentiated"]
+      }
+    ]
+  }
+]

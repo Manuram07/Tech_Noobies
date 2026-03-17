@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% block title %}Genomic Associations{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🧬 Genomic <span class="header-accent">Associations</span></h1>
+    <p class="page-subtitle">Gene-disease association explorer powered by Open Targets + NCBI E-utilities. Evidence-ranked genetic associations with chromosomal data.</p>
+</div>
+
+<!-- Query Form -->
+<form class="search-form" action="/genomics" method="GET">
+    <div class="form-group">
+        <label class="form-label">Disease</label>
+        <input type="text" name="disease" class="form-input disease-search-input" placeholder="Search a disease for gene associations..." value="{{ disease_name }}">
+    </div>
+    <div class="form-group" style="flex: 0.4;">
+        <label class="form-label">&nbsp;</label>
+        <button type="submit" class="btn btn-primary" style="width:100%;">🧬 Find Genes</button>
+    </div>
+</form>
+
+{% if disease and gene_data %}
+<!-- Disease Info -->
+<div class="card" style="margin-bottom:var(--spacing-xl);">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div>
+            <h3 style="font-size:1.1rem; font-weight:700;">{{ disease.name }}</h3>
+            <span class="badge badge-blue">{{ disease.icd_code }}</span>
+            <span class="badge badge-purple" style="margin-left:4px;">{{ disease.category }}</span>
+        </div>
+        <div style="display:flex; gap:6px; align-items:center;">
+            <span class="badge badge-green" style="font-size:0.85rem; padding:6px 14px;">{{ gene_data|length }} genes found</span>
+            <span class="badge badge-blue" style="font-size:0.75rem; padding:4px 10px;">Open Targets + NCBI</span>
+        </div>
+    </div>
+</div>
+
+<!-- Gene Association Table -->
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">🧬 Associated Genes (ranked by evidence)</span>
+    </div>
+    <div style="overflow-x:auto;">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Gene Symbol</th>
+                <th>Gene Name</th>
+                <th>Chr</th>
+                <th>Evidence Score</th>
+                <th>Strength</th>
+                <th>Sources</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for gene in gene_data %}
+            <tr class="animate-on-scroll">
+                <td style="color:var(--text-muted); font-size:0.8rem;">{{ loop.index }}</td>
+                <td>
+                    <span style="font-family:var(--font-mono); font-weight:700; color:var(--accent-primary);">{{ gene.gene_symbol }}</span>
+                </td>
+                <td style="font-size:0.85rem;">{{ gene.gene_name }}</td>
+                <td>
+                    {% if gene.chromosome %}
+                    <span class="badge badge-blue" style="font-size:0.7rem;">Chr {{ gene.chromosome }}</span>
+                    {% if gene.location %}
+                    <span style="font-size:0.65rem; color:var(--text-muted); display:block; margin-top:2px;">{{ gene.location }}</span>
+                    {% endif %}
+                    {% else %}
+                    <span style="color:var(--text-muted);">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <div class="evidence-bar" style="width:100px;">
+                            <div class="evidence-fill" style="width:{{ (gene.evidence_score * 100)|int }}%; background: {{ gene.strength_color }};"></div>
+                        </div>
+                        <span style="font-family:var(--font-mono); font-size:0.85rem; font-weight:600;">{{ "%.3f"|format(gene.evidence_score) }}</span>
+                    </div>
+                </td>
+                <td>
+                    <span class="badge" style="background: {{ gene.strength_color }}20; color: {{ gene.strength_color }};">{{ gene.strength }}</span>
+                </td>
+                <td>
+                    <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                        {% if gene.source_url %}
+                        <a href="{{ gene.source_url }}" target="_blank" class="btn btn-secondary btn-sm" style="font-size:0.7rem;">{{ gene.source }} ↗</a>
+                        {% endif %}
+                        {% if gene.ncbi_url %}
+                        <a href="{{ gene.ncbi_url }}" target="_blank" class="btn btn-secondary btn-sm" style="font-size:0.7rem;">NCBI ↗</a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<!-- Evidence Distribution Chart -->
+{% if gene_data|length > 3 %}
+<div class="chart-container" style="margin-top:var(--spacing-lg);">
+    <div class="chart-title">📊 Evidence Score Distribution</div>
+    <div class="chart-wrapper" style="height:250px;">
+        <canvas id="geneChart"></canvas>
+    </div>
+</div>
+{% endif %}
+
+{% elif disease_name and not disease %}
+<div class="empty-state">
+    <div class="empty-icon">🔍</div>
+    <h3>Disease "{{ disease_name }}" not found in ontology</h3>
+    <p>Try a different disease name or <a href="/diseases">browse the ontology</a>.</p>
+</div>
+
+{% elif disease and not gene_data %}
+<div class="empty-state">
+    <div class="empty-icon">🧬</div>
+    <h3>No gene associations found</h3>
+    <p>No gene-disease associations found for {{ disease.name }}. This may mean the Open Targets API returned no results, or the disease is not in their database.</p>
+</div>
+
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">🧬</div>
+    <h3>Search for a disease to explore genetic associations</h3>
+    <p>Enter a disease name above. Try <strong>Type 2 Diabetes</strong>, <strong>Breast Cancer</strong>, or <strong>Alzheimer's Disease</strong> for strong results.</p>
+</div>
+
+<!-- Suggested Queries -->
+<section class="section" style="margin-top:var(--spacing-xl);">
+    <div class="section-header">
+        <h2 class="section-title">💡 Suggested Queries</h2>
+    </div>
+    <div class="grid-3">
+        <a href="/genomics?disease=Type 2 Diabetes" class="card" style="text-decoration:none; color:inherit;">
+            <div class="card-title">Type 2 Diabetes</div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">TCF7L2, PPARG, KCNJ11 and more</p>
+        </a>
+        <a href="/genomics?disease=Breast Cancer" class="card" style="text-decoration:none; color:inherit;">
+            <div class="card-title">Breast Cancer</div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">BRCA1, BRCA2, TP53 and more</p>
+        </a>
+        <a href="/genomics?disease=Alzheimer's Disease" class="card" style="text-decoration:none; color:inherit;">
+            <div class="card-title">Alzheimer's Disease</div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">APOE, APP, PSEN1 and more</p>
+        </a>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if gene_data and gene_data|length > 3 %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const geneData = {{ gene_data | tojson }};
+    const labels = geneData.map(g => g.gene_symbol);
+    const scores = geneData.map(g => g.evidence_score);
+    const colors = geneData.map(g => g.strength_color + '80');
+    const borders = geneData.map(g => g.strength_color);
+
+    const ctx = document.getElementById('geneChart');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Evidence Score',
+                data: scores,
+                backgroundColor: colors,
+                borderColor: borders,
+                borderWidth: 1,
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 22, 41, 0.95)',
+                    borderColor: 'rgba(0, 212, 255, 0.2)',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    callbacks: {
+                        afterLabel: function(ctx) {
+                            const gene = geneData[ctx.dataIndex];
+                            return gene.gene_name;
+                        }
+                    }
+                },
+            },
+            scales: {
+                x: {
+                    min: 0, max: 1,
+                    grid: { color: 'rgba(148, 163, 184, 0.05)' },
+                    ticks: { color: '#64748b', font: { family: 'Inter', size: 11 } },
+                    title: { display: true, text: 'Evidence Score', color: '#64748b' },
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: { color: '#00d4ff', font: { family: 'JetBrains Mono', size: 12, weight: '600' } },
+                },
+            }
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

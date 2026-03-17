@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <h1>Disease Surveillance <span class="header-accent">Intelligence</span></h1>
+    <p class="subtitle">
+        Unified multi-source disease intelligence platform integrating epidemiological surveillance, 
+        disease classification, genomic associations, and outbreak monitoring from WHO, CDC, Disease.sh, and more.
+    </p>
+    <form class="hero-search" action="/query" method="GET">
+        <div style="flex:2; position:relative;">
+            <input type="text" name="disease" class="form-input disease-search-input" placeholder="Search any disease — Dengue, COVID-19, Malaria..." required>
+        </div>
+        <input type="text" name="country" class="form-input" placeholder="Country (optional)" style="flex:1;">
+        <button type="submit" class="btn btn-primary">🔍 Analyze</button>
+    </form>
+</section>
+
+<!-- Feature Cards -->
+<section class="feature-grid">
+    <a href="/diseases" class="feature-card blue animate-on-scroll">
+        <div class="feature-icon" style="background: rgba(0,212,255,0.1);">🦠</div>
+        <h3>Disease Classification</h3>
+        <p>ICD-10/11 disease ontology with hierarchical taxonomy, synonyms, subtypes, and cross-references. Browse and search 30+ diseases.</p>
+        <span class="feature-tag badge-blue">Feature A — Active</span>
+    </a>
+
+    <a href="/surveillance" class="feature-card purple animate-on-scroll">
+        <div class="feature-icon" style="background: rgba(124,58,237,0.1);">📊</div>
+        <h3>Epidemiological Surveillance</h3>
+        <p>Real-time disease statistics, trend analysis, outbreak alerts, and anomaly detection from global surveillance networks.</p>
+        <span class="feature-tag badge-purple">Feature B — Active</span>
+    </a>
+
+    <a href="/genomics" class="feature-card green animate-on-scroll">
+        <div class="feature-icon" style="background: rgba(34,197,94,0.1);">🧬</div>
+        <h3>Genomic Associations</h3>
+        <p>Gene-disease association explorer powered by Open Targets. Evidence-scored rankings with gene network visualization.</p>
+        <span class="feature-tag badge-green">Feature C — Active</span>
+    </a>
+
+    <a href="/therapeutics" class="feature-card orange animate-on-scroll">
+        <div class="feature-icon" style="background: rgba(249,115,22,0.1);">💊</div>
+        <h3>Therapeutic Insights</h3>
+        <p>Drug-disease associations, mechanism of action analysis, and WHO Essential Medicines mapping. Architecture designed.</p>
+        <span class="feature-tag badge-orange">Feature D — Designed</span>
+    </a>
+
+    <a href="/visual-intelligence" class="feature-card red animate-on-scroll">
+        <div class="feature-icon" style="background: rgba(239,68,68,0.1);">📈</div>
+        <h3>Visual Intelligence</h3>
+        <p>Geographic heat maps, outbreak timelines, disease trend overlays, and gene-disease-drug network graphs.</p>
+        <span class="feature-tag badge-red">Feature E — Designed</span>
+    </a>
+</section>
+
+<!-- Recent Outbreak Alerts -->
+{% if alerts %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">⚠️ Recent Outbreak Alerts</h2>
+        <a href="/surveillance/alerts" class="btn btn-secondary btn-sm">View All →</a>
+    </div>
+    {% for alert in alerts %}
+    <div class="alert-card severity-border-{{ alert.severity }} animate-on-scroll">
+        <div style="display:flex; justify-content:space-between; align-items:start;">
+            <div>
+                <div class="alert-title">{{ alert.title }}</div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:4px;">{{ alert.description[:150] }}{% if alert.description|length > 150 %}...{% endif %}</p>
+            </div>
+            <span class="severity-badge severity-{{ alert.severity }}">{{ alert.severity }}</span>
+        </div>
+        <div class="alert-meta">
+            <span>📍 {{ alert.country }}{% if alert.region %} · {{ alert.region }}{% endif %}</span>
+            <span>📡 {{ alert.source }}</span>
+            {% if alert.reported_date %}<span>📅 {{ alert.reported_date }}</span>{% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
+
+<!-- Data Sources -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">🌐 Integrated Data Sources</h2>
+    </div>
+    <div class="grid-3">
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <span class="card-title">Global APIs</span>
+                <div class="card-icon blue">🌍</div>
+            </div>
+            <p style="font-size:0.85rem; color:var(--text-secondary);">Disease.sh, WHO GHO OData, CDC Open Data Portal — real-time global disease statistics and indicators.</p>
+        </div>
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <span class="card-title">Outbreak Feeds</span>
+                <div class="card-icon orange">📡</div>
+            </div>
+            <p style="font-size:0.85rem; color:var(--text-secondary);">CDC FluView, HealthMap, ProMED Mail — structured outbreak alerts and early warning signals.</p>
+        </div>
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <span class="card-title">Genomic Databases</span>
+                <div class="card-icon green">🧬</div>
+            </div>
+            <p style="font-size:0.85rem; color:var(--text-secondary);">Open Targets Platform, NCBI OMIM — gene-disease associations with evidence scoring.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

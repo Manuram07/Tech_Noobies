@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+<h1>💊 Therapeutic Insights</h1>
+<p>Drug information, mechanisms of action, and WHO Essential Medicines status via PubChem.</p>
+</div>
+
+
+<form method="GET">
+
+<input
+type="text"
+name="disease"
+placeholder="Search disease (e.g. Malaria, Tuberculosis)"
+value="{{ request.args.get('disease','') }}"
+>
+
+<button type="submit">Search</button>
+
+</form>
+
+
+{% if drugs %}
+
+<table class="data-table">
+
+<thead>
+
+<tr>
+<th>Drug</th>
+<th>Mechanism of Action</th>
+<th>WHO Essential</th>
+<th>Source</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for drug in drugs %}
+
+<tr>
+
+<td>{{ drug.drug_name }}</td>
+
+<td>{{ drug.mechanism }}</td>
+
+<td>{{ drug.approval_status }}</td>
+
+<td>
+
+<a href="{{ drug.source_url }}" target="_blank">
+
+PubChem
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endif %}
+
+{% endblock %}

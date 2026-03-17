@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Outbreak Alerts{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>⚠️ Outbreak <span class="header-accent">Alerts</span></h1>
+    <p class="page-subtitle">Real-time outbreak alerts aggregated from CDC, WHO, HealthMap, and ProMED surveillance networks.</p>
+</div>
+
+<!-- Filter Form -->
+<form class="search-form" action="/surveillance/alerts" method="GET">
+    <div class="form-group">
+        <label class="form-label">Disease</label>
+        <input type="text" name="disease" class="form-input disease-search-input" placeholder="Filter by disease..." value="{{ disease_name }}">
+    </div>
+    <div class="form-group">
+        <label class="form-label">Country</label>
+        <input type="text" name="country" class="form-input" placeholder="Filter by country..." value="{{ country }}">
+    </div>
+    <div class="form-group" style="flex: 0.3;">
+        <label class="form-label">&nbsp;</label>
+        <button type="submit" class="btn btn-primary" style="width:100%;">🔍 Filter</button>
+    </div>
+</form>
+
+{% if alerts %}
+{% for alert in alerts %}
+<div class="alert-card severity-border-{{ alert.severity }} animate-on-scroll">
+    <div style="display:flex; justify-content:space-between; align-items:start; gap:16px;">
+        <div style="flex:1;">
+            <div class="alert-title">{{ alert.title }}</div>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:6px; line-height:1.6;">{{ alert.description }}</p>
+        </div>
+        <span class="severity-badge severity-{{ alert.severity }}">{{ alert.severity }}</span>
+    </div>
+    <div class="alert-meta">
+        <span>📍 {{ alert.country }}{% if alert.region %} · {{ alert.region }}{% endif %}</span>
+        <span>📡 {{ alert.source }}</span>
+        {% if alert.reported_date %}<span>📅 {{ alert.reported_date }}</span>{% endif %}
+        {% if alert.source_url %}<a href="{{ alert.source_url }}" target="_blank" style="color:var(--accent-primary);">🔗 Source</a>{% endif %}
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">⚠️</div>
+    <h3>No alerts found</h3>
+    <p>No outbreak alerts match your current filters.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% block title %}Analysis Results{% endblock %}
+
+{% block content %}
+{% if error %}
+<div class="empty-state">
+    <div class="empty-icon">⚠️</div>
+    <h3>{{ error }}</h3>
+    <a href="/" class="btn btn-primary" style="margin-top:16px;">← Back to Dashboard</a>
+</div>
+{% else %}
+
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">›</span>
+    <span>Unified Analysis</span>
+</div>
+
+<div class="page-header">
+    <h1>🔍 Analysis: <span class="header-accent">{{ query_disease }}</span></h1>
+    {% if query_country %}
+    <p class="page-subtitle">Region: {{ query_country }} — Multi-layer surveillance intelligence report</p>
+    {% else %}
+    <p class="page-subtitle">Global — Multi-layer surveillance intelligence report</p>
+    {% endif %}
+</div>
+
+{% if not disease %}
+<div class="empty-state">
+    <div class="empty-icon">🔍</div>
+    <h3>Disease "{{ query_disease }}" not found in ontology</h3>
+    <p>The disease could not be matched to our ICD-10 taxonomy. Try a different name or <a href="/diseases">browse the disease ontology</a>.</p>
+</div>
+{% else %}
+
+<!-- ═══ SECTION A: Disease Classification ═══ -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">🦠 Disease Classification</h2>
+        <span class="badge badge-blue">Feature A</span>
+    </div>
+    <div class="card">
+        <div class="grid-2" style="gap:var(--spacing-xl);">
+            <div>
+                <table style="width:100%; font-size:0.9rem;">
+                    <tr>
+                        <td style="padding:8px 0; color:var(--text-muted); width:120px;">Disease</td>
+                        <td style="padding:8px 0; font-weight:700; font-size:1.1rem;">{{ disease.name }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; color:var(--text-muted);">ICD-10</td>
+                        <td style="padding:8px 0;"><span style="font-family:var(--font-mono); color:var(--accent-primary); font-size:1rem;">{{ disease.icd_code }}</span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; color:var(--text-muted);">Category</td>
+                        <td style="padding:8px 0;"><span class="badge badge-purple">{{ disease.category }}</span></td>
+                    </tr>
+                    {% if disease.synonyms %}
+                    <tr>
+                        <td style="padding:8px 0; color:var(--text-muted);">Synonyms</td>
+                        <td style="padding:8px 0;">
+                            {% for syn in disease.synonyms %}
+                            <span class="badge badge-green" style="margin:2px;">{{ syn }}</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if disease.subtypes %}
+                    <tr>
+                        <td style="padding:8px 0; color:var(--text-muted);">Subtypes</td>
+                        <td style="padding:8px 0;">
+                            {% for sub in disease.subtypes %}
+                            <span class="badge badge-orange" style="margin:2px;">{{ sub }}</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+            <div>
+                <p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.8;">{{ disease.description }}</p>
+                {% if classification and classification.ancestors %}
+                <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border-color);">
+                    <span style="font-size:0.75rem; color:var(--text-muted);">TAXONOMY PATH</span>
+                    <div style="margin-top:4px;">
+                        {% for anc in classification.ancestors %}
+                        <span style="font-size:0.8rem; color:var(--text-secondary);">{{ anc.name }}</span>
+                        <span style="color:var(--text-muted); font-size:0.7rem;"> › </span>
+                        {% endfor %}
+                        <span style="font-size:0.8rem; font-weight:600; color:var(--accent-primary);">{{ disease.name }}</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ SECTION B: Epidemiological Surveillance ═══ -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">📊 Epidemiological Surveillance</h2>
+        <span class="badge badge-purple">Feature B</span>
+    </div>
+
+    {% if epi_summary and epi_summary.total_cases > 0 %}
+    <div class="stats-grid">
+        <div class="stat-card accent-blue">
+            <div class="stat-label">Total Cases</div>
+            <div class="stat-value text-blue">{{ "{:,}".format(epi_summary.total_cases) }}</div>
+        </div>
+        <div class="stat-card accent-red">
+            <div class="stat-label">Deaths</div>
+            <div class="stat-value text-red">{{ "{:,}".format(epi_summary.total_deaths) }}</div>
+        </div>
+        <div class="stat-card accent-green">
+            <div class="stat-label">Recovered</div>
+            <div class="stat-value text-green">{{ "{:,}".format(epi_summary.total_recovered) }}</div>
+        </div>
+        <div class="stat-card accent-orange">
+            <div class="stat-label">Mortality</div>
+            <div class="stat-value text-orange">{{ epi_summary.mortality_rate }}%</div>
+        </div>
+    </div>
+
+    {% if epi_data %}
+    <div class="chart-container">
+        <div class="chart-title">📈 Case Trends</div>
+        <div class="chart-wrapper">
+            <canvas id="queryEpiChart"></canvas>
+        </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="card">
+        <div class="empty-state" style="padding:var(--spacing-lg);">
+            <p>No epidemiological data available for {{ disease.name }}{% if query_country %} in {{ query_country }}{% endif %}.</p>
+            <a href="/surveillance?disease={{ disease.name }}{% if query_country %}&country={{ query_country }}{% endif %}" class="btn btn-secondary btn-sm" style="margin-top:8px;">Go to Surveillance →</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Outbreak Alerts -->
+    {% if alerts %}
+    <div style="margin-top:var(--spacing-lg);">
+        <h3 style="font-size:1rem; font-weight:600; margin-bottom:var(--spacing-sm);">⚠️ Active Alerts</h3>
+        {% for alert in alerts[:3] %}
+        <div class="alert-card severity-border-{{ alert.severity }}">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="alert-title">{{ alert.title }}</span>
+                <span class="severity-badge severity-{{ alert.severity }}">{{ alert.severity }}</span>
+            </div>
+            <div class="alert-meta">
+                <span>📍 {{ alert.country }}</span>
+                <span>📡 {{ alert.source }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+
+<!-- ═══ SECTION C: Genomic Associations ═══ -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">🧬 Genomic Associations</h2>
+        <span class="badge badge-green">Feature C</span>
+    </div>
+
+    {% if genomic_data %}
+    <div class="card">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Gene</th>
+                    <th>Name</th>
+                    <th>Evidence</th>
+                    <th>Strength</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gene in genomic_data[:10] %}
+                <tr>
+                    <td><span style="font-family:var(--font-mono); font-weight:700; color:var(--accent-primary);">{{ gene.gene_symbol }}</span></td>
+                    <td style="font-size:0.85rem;">{{ gene.gene_name }}</td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="evidence-bar" style="width:80px;">
+                                <div class="evidence-fill" style="width:{{ (gene.evidence_score * 100)|int }}%; background:{{ gene.strength_color }};"></div>
+                            </div>
+                            <span style="font-family:var(--font-mono); font-size:0.8rem;">{{ "%.3f"|format(gene.evidence_score) }}</span>
+                        </div>
+                    </td>
+                    <td><span class="badge" style="background:{{ gene.strength_color }}20; color:{{ gene.strength_color }};">{{ gene.strength }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if genomic_data|length > 10 %}
+        <div style="text-align:center; margin-top:var(--spacing-md);">
+            <a href="/genomics?disease={{ disease.name }}" class="btn btn-secondary btn-sm">View All {{ genomic_data|length }} Associations →</a>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="empty-state" style="padding:var(--spacing-lg);">
+            <p>No gene associations found. Try querying from the <a href="/genomics?disease={{ disease.name }}">Genomics module</a> to fetch from Open Targets.</p>
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<!-- Navigation Links -->
+<div style="display:flex; gap:var(--spacing-sm); flex-wrap:wrap; margin-top:var(--spacing-md);">
+    <a href="/diseases/{{ disease.id }}" class="btn btn-secondary">🦠 Full Classification</a>
+    <a href="/surveillance?disease={{ disease.name }}{% if query_country %}&country={{ query_country }}{% endif %}" class="btn btn-secondary">📊 Full Surveillance</a>
+    <a href="/genomics?disease={{ disease.name }}" class="btn btn-secondary">🧬 Full Genomics</a>
+</div>
+
+{% endif %}
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if epi_data %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const epiData = {{ epi_data | tojson }};
+    const labels = epiData.map(d => d.date);
+    const cases = epiData.map(d => d.cases);
+    const deaths = epiData.map(d => d.deaths);
+
+    renderTimeSeriesChart('queryEpiChart', labels, [
+        { label: 'Cases', data: cases, color: '#00d4ff', fill: true },
+        { label: 'Deaths', data: deaths, color: '#ef4444', fill: false },
+    ]);
+});
+</script>
+{% endif %}
+{% endblock %}

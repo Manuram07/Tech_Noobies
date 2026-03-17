@@ -1,0 +1,15 @@
+[
+ {
+  "disease": "Tuberculosis",
+  "drug_name": "Rifampicin",
+  "drug_class": "Antibiotic",
+  "mechanism": "Inhibits RNA polymerase",
+  "target_gene": "rpoB"
+ },
+ {
+  "disease": "Type 2 Diabetes",
+  "drug_name": "Metformin",
+  "drug_class": "Biguanide",
+  "mechanism": "Reduces hepatic glucose production"
+ }
+]

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>📊 Visual Intelligence Layer</h1>
+
+<form method="GET">
+
+<input
+type="text"
+name="disease"
+placeholder="Search disease (e.g. Malaria)"
+value="{{ disease if disease else '' }}"
+>
+
+<button type="submit">Search</button>
+
+</form>
+
+
+
+{% if disease %}
+
+<h2>Disease: {{ disease }}</h2>
+
+
+
+</table>
+
+
+<hr>
+
+<h3>📈 Outbreak Timeline</h3>
+
+<canvas id="trendChart"></canvas>
+
+
+<hr>
+
+<h3>🌍 Geographical Heat Map</h3>
+
+<div id="map" style="height:400px;"></div>
+
+
+<hr>
+
+<h3>🧬 Gene-Drug-Disease Network</h3>
+
+<div id="network"></div>
+
+{% endif %}
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% if trend_data %}
+<script>
+
+const trend = {{ trend_data | tojson }}
+
+new Chart(document.getElementById("trendChart"),{
+type:'line',
+data:{
+labels:trend.labels,
+datasets:[{
+label:"Cases",
+data:trend.values,
+borderColor:"cyan"
+}]
+}
+})
+
+</script>
+{% endif %}
+
+
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+{% if map_data %}
+<script>
+
+const map=L.map("map").setView([20,0],2)
+
+L.tileLayer(
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+).addTo(map)
+
+const mapData = {{ map_data | tojson }}
+
+mapData.forEach(loc => {
+
+L.circle([loc.lat,loc.lng],{
+color:"red",
+radius:loc.cases
+})
+.addTo(map)
+.bindPopup(loc.name + " : " + loc.cases + " cases")
+
+})
+
+</script>
+{% endif %}
+
+
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+{% if network %}
+<script>
+
+const data = {{ network | tojson }}
+
+const width = 700
+const height = 400
+
+const svg = d3.select("#network")
+.append("svg")
+.attr("width",width)
+.attr("height",height)
+
+const simulation = d3.forceSimulation(data.nodes)
+.force("link",d3.forceLink(data.links).id(d=>d.id))
+.force("charge",d3.forceManyBody())
+.force("center",d3.forceCenter(width/2,height/2))
+
+const link = svg.append("g")
+.selectAll("line")
+.data(data.links)
+.enter()
+.append("line")
+.style("stroke","#aaa")
+
+const node = svg.append("g")
+.selectAll("circle")
+.data(data.nodes)
+.enter()
+.append("circle")
+.attr("r",10)
+.style("fill","orange")
+
+simulation.on("tick",()=>{
+
+link
+.attr("x1",d=>d.source.x)
+.attr("y1",d=>d.source.y)
+.attr("x2",d=>d.target.x)
+.attr("y2",d=>d.target.y)
+
+node
+.attr("cx",d=>d.x)
+.attr("cy",d=>d.y)
+
+})
+
+</script>
+{% endif %}
+
+{% endblock %}
