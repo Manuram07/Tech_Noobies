@@ -143,8 +143,13 @@ MEDFUSION/
 ---
 
 ## 👤 Team
-
-Solo project by **[Your Name]** — Hackfest 2026
+project by **[Tech Noobies]**
+Nookala Manuram Reddy
+Vadla Pranav
+Gummadi Nishanth Reddy
+P. Shashi Preetham Reddy
+Sai Krishna Yadav
+    — Hackfest 2026
 
 ---
 
