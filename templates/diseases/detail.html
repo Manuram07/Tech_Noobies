@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}{{ disease.name if disease else 'Disease Detail' }}{% endblock %}
+
+{% block content %}
+{% if error %}
+<div class="empty-state">
+    <div class="empty-icon">❌</div>
+    <h3>{{ error }}</h3>
+    <a href="/diseases" class="btn btn-primary" style="margin-top:16px;">← Back to Diseases</a>
+</div>
+{% else %}
+
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">›</span>
+    <a href="/diseases">Diseases</a>
+    {% for ancestor in ancestors %}
+    <span class="separator">›</span>
+    <a href="/diseases/{{ ancestor.id }}">{{ ancestor.name }}</a>
+    {% endfor %}
+    <span class="separator">›</span>
+    <span>{{ disease.name }}</span>
+</div>
+
+<div class="page-header">
+    <h1>{{ disease.name }}</h1>
+    <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+        <span class="badge badge-blue" style="font-size:0.85rem; padding:4px 12px;">{{ disease.icd_code }}</span>
+        <span class="badge badge-purple" style="font-size:0.85rem; padding:4px 12px;">{{ disease.category }}</span>
+    </div>
+</div>
+
+<!-- Classification Card -->
+<div class="grid-2">
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">📋 Classification Details</span>
+        </div>
+        <table style="width:100%; font-size:0.9rem;">
+            <tr>
+                <td style="padding:8px 0; color:var(--text-muted); width:140px;">Disease Name</td>
+                <td style="padding:8px 0; font-weight:600;">{{ disease.name }}</td>
+            </tr>
+            <tr>
+                <td style="padding:8px 0; color:var(--text-muted);">ICD-10 Code</td>
+                <td style="padding:8px 0;"><span style="font-family:var(--font-mono); color:var(--accent-primary);">{{ disease.icd_code }}</span></td>
+            </tr>
+            <tr>
+                <td style="padding:8px 0; color:var(--text-muted);">Category</td>
+                <td style="padding:8px 0;">{{ disease.category }}</td>
+            </tr>
+            {% if disease.synonyms %}
+            <tr>
+                <td style="padding:8px 0; color:var(--text-muted);">Synonyms</td>
+                <td style="padding:8px 0;">
+                    {% for syn in disease.synonyms %}
+                    <span class="badge badge-green" style="margin:2px;">{{ syn }}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+            {% if disease.subtypes %}
+            <tr>
+                <td style="padding:8px 0; color:var(--text-muted);">Subtypes</td>
+                <td style="padding:8px 0;">
+                    {% for sub in disease.subtypes %}
+                    <span class="badge badge-orange" style="margin:2px;">{{ sub }}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">📝 Description</span>
+        </div>
+        <p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.8;">{{ disease.description }}</p>
+
+        {% if disease.ontology_refs %}
+        <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border-color);">
+            <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:8px;">Ontology Cross-References</span>
+            {% for ref_name, ref_val in disease.ontology_refs.items() %}
+            <span class="badge badge-blue" style="margin:2px;">{{ ref_name }}: {{ ref_val }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Taxonomy Hierarchy -->
+{% if ancestors or children %}
+<section class="section" style="margin-top:var(--spacing-xl);">
+    <div class="section-header">
+        <h2 class="section-title">🌳 Taxonomy Hierarchy</h2>
+    </div>
+    <div class="card">
+        <ul class="taxonomy-tree">
+            {% for ancestor in ancestors %}
+            <li class="taxonomy-node">
+                <a href="/diseases/{{ ancestor.id }}" class="taxonomy-label" style="opacity: {{ 0.5 + loop.index * 0.1 }};">
+                    {{ ancestor.name }}
+                    <span class="icd-code">{{ ancestor.icd_code }}</span>
+                </a>
+            </li>
+            {% endfor %}
+            <li class="taxonomy-node">
+                <span class="taxonomy-label" style="border-color: var(--accent-primary); background: rgba(0,212,255,0.08);">
+                    <strong>{{ disease.name }}</strong>
+                    <span class="icd-code">{{ disease.icd_code }}</span>
+                </span>
+                {% if children %}
+                <ul class="taxonomy-tree" style="margin-top:8px;">
+                    {% for child in children %}
+                    <li class="taxonomy-node">
+                        <a href="/diseases/{{ child.id }}" class="taxonomy-label">
+                            {{ child.name }}
+                            <span class="icd-code">{{ child.icd_code }}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</section>
+{% endif %}
+
+<!-- Quick Actions -->
+<div style="display:flex; gap:var(--spacing-sm); margin-top:var(--spacing-xl); flex-wrap:wrap;">
+    <a href="/surveillance?disease={{ disease.name }}" class="btn btn-primary">📊 View Surveillance Data</a>
+    <a href="/genomics?disease={{ disease.name }}" class="btn btn-secondary">🧬 View Genomic Associations</a>
+    <a href="/query?disease={{ disease.name }}" class="btn btn-secondary">🔍 Full Analysis</a>
+</div>
+
+{% endif %}
+{% endblock %}

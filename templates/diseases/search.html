@@ -1,1 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Disease Classification{% endblock %}
 
+{% block content %}
+<div class="page-header">
+    <h1>🦠 Disease <span class="header-accent">Classification</span></h1>
+    <p class="page-subtitle">ICD-10/11 disease ontology with hierarchical taxonomy. Search, browse, and explore disease classifications.</p>
+</div>
+
+<!-- Search Form -->
+<form class="search-form" action="/diseases" method="GET">
+    <div class="form-group">
+        <label class="form-label">Search Disease</label>
+        <input type="text" name="q" class="form-input disease-search-input" placeholder="Search by name, ICD code, or synonym..." value="{{ query }}">
+    </div>
+    <div class="form-group" style="flex: 0.5;">
+        <label class="form-label">&nbsp;</label>
+        <button type="submit" class="btn btn-primary" style="width:100%;">🔍 Search</button>
+    </div>
+</form>
+
+<!-- Category Filter -->
+{% if categories %}
+<div style="margin-bottom: var(--spacing-xl); display: flex; flex-wrap: wrap; gap: var(--spacing-sm);">
+    <a href="/diseases" class="btn btn-sm {% if not category %}btn-primary{% else %}btn-secondary{% endif %}">All</a>
+    {% for cat in categories %}
+    <a href="/diseases?category={{ cat.category }}" class="btn btn-sm {% if category == cat.category %}btn-primary{% else %}btn-secondary{% endif %}">{{ cat.name }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Search Results -->
+{% if query or category %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">
+            {% if query %}Results for "{{ query }}"{% elif category %}{{ category }}{% endif %}
+            {% if results %}<span class="badge badge-blue" style="margin-left:8px;">{{ results|length }}</span>{% endif %}
+        </h2>
+    </div>
+    {% if results %}
+    <div class="grid-2">
+        {% for disease in results %}
+        <a href="/diseases/{{ disease.id }}" class="card animate-on-scroll" style="text-decoration:none; color:inherit;">
+            <div class="card-header">
+                <span class="card-title">{{ disease.name }}</span>
+                <span class="badge badge-blue">{{ disease.icd_code }}</span>
+            </div>
+            <span class="badge badge-purple" style="margin-bottom:8px;">{{ disease.category }}</span>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;">{{ disease.description[:120] }}{% if disease.description and disease.description|length > 120 %}...{% endif %}</p>
+            {% if disease.synonyms %}
+            <div style="margin-top:8px;">
+                {% for syn in disease.synonyms[:3] %}
+                <span class="badge badge-green" style="margin:2px; font-size:0.7rem;">{{ syn }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No results found</h3>
+        <p>Try a different search term or browse by category.</p>
+    </div>
+    {% endif %}
+</section>
+{% endif %}
+
+<!-- Browse All Diseases (when no search) -->
+{% if all_diseases and not query and not category %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">📋 Disease Ontology Browser</h2>
+        <span class="badge badge-blue">{{ all_diseases|length }} diseases</span>
+    </div>
+    {% set current_category = [None] %}
+    {% for disease in all_diseases %}
+        {% if disease.category != current_category[0] %}
+            {% if current_category[0] is not none %}</div>{% endif %}
+            {% if current_category.append(disease.category) %}{% endif %}
+            {% if current_category.pop(0) or true %}{% endif %}
+            <h3 style="margin: var(--spacing-lg) 0 var(--spacing-sm); color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">{{ disease.category }}</h3>
+            <div class="grid-2">
+        {% endif %}
+        <a href="/diseases/{{ disease.id }}" class="card animate-on-scroll" style="text-decoration:none; color:inherit; padding: var(--spacing-md);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:600;">{{ disease.name }}</span>
+                <span class="badge badge-blue" style="font-size:0.7rem;">{{ disease.icd_code }}</span>
+            </div>
+        </a>
+    {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}
