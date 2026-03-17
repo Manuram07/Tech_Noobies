@@ -144,11 +144,11 @@ MEDFUSION/
 
 ## 👤 Team
 project by **[Tech Noobies]**
-Nookala Manuram Reddy
-Vadla Pranav
-Gummadi Nishanth Reddy
-P. Shashi Preetham Reddy
-Sai Krishna Yadav
+1.Nookala Manuram Reddy
+2.Vadla Pranav
+3.Gummadi Nishanth Reddy
+4.P. Shashi Preetham Reddy
+5.Sai Krishna Yadav
     — Hackfest 2026
 
 ---
