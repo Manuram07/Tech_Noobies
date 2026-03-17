@@ -1,0 +1,57 @@
+# MEDFUSION — Disease Surveillance Intelligence Dashboard
+
+# Python / Flask
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+*.whl
+.eggs/
+
+# Virtual Environment
+venv/
+env/
+.env
+.venv/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+medfusion.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Node (if added later)
+node_modules/
+
+# Misc
+*.bak
+*.tmp
+*.old
